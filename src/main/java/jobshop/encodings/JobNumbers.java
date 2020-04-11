@@ -50,6 +50,25 @@ public class JobNumbers extends Encoding {
         return new Schedule(instance, startTimes);
     }
 
+    public static JobNumbers fromSchedule(Schedule sched) {
+        JobNumbers job = new JobNumbers(sched.pb);
+        int[] nextToSetJobs = new int[job.instance.numJobs];
+        int schedSize = job.instance.numJobs * job.instance.numMachines;
+        int best;
+        while(schedSize > 0) {
+            best = -1;
+            for (int i=0; i < job.instance.numJobs; i++) {
+                if (nextToSetJobs[i] < job.instance.numTasks) {
+                    if (best == -1 || sched.startTime(best, nextToSetJobs[best]) > sched.startTime(i, nextToSetJobs[i])) best = i;
+                }
+            }
+            job.jobs[job.nextToSet++] = best;
+            nextToSetJobs[best]++;
+            schedSize--;
+        }
+        return job;
+    }
+
     @Override
     public String toString() {
         return Arrays.toString(Arrays.copyOfRange(jobs,0, nextToSet));

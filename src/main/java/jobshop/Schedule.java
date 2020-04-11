@@ -51,6 +51,18 @@ public class Schedule {
 
         return true;
     }
+    public String toString(){
+        String str="\n";
+        for(int job=0;job<pb.numJobs;job++){
+            str+= "job "+ (job+1) +": "+startTime(job,0)+" - "+pb.duration(job,0);
+            for(int t = 1 ; t<pb.numTasks ; t++) {
+                int s=startTime(job,t);
+                str+="/ "+s+" - "+   (pb.duration(job,t)+s);
+            }
+            str+="\n";
+        }
+        return  str;
+    }
 
     public int makespan() {
         int max = -1;
