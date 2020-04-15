@@ -2,6 +2,7 @@ package jobshop;
 
 import jobshop.encodings.ResourceOrder;
 import jobshop.encodings.Task;
+import jobshop.solvers.DescentSolver;
 import jobshop.solvers.srptSolver;
 
 import java.io.IOException;
@@ -40,13 +41,7 @@ public class DebuggingMain {
             System.out.println("Test  2 ");
             ResourceOrder enc2=new ResourceOrder(instance);
             long dealine=11111;
-            Result enc3= new srptSolver().solve(instance,dealine);
-            enc2.tasksByMachine[0][0]=new Task(0,0);
-            enc2.tasksByMachine[0][1]=new Task(1,1);
-            enc2.tasksByMachine[1][0]=new Task(0,1);
-            enc2.tasksByMachine[1][1]=new Task(1,0);
-            enc2.tasksByMachine[2][0]=new Task(0,2);
-            enc2.tasksByMachine[2][1]=new Task(1,2);
+            Result enc3= new DescentSolver().solve(instance,dealine);
             Schedule sched2 = enc2.toSchedule();
             System.out.println("schedule"+sched2);
         } catch (IOException e) {
