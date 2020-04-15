@@ -3,14 +3,14 @@ package jobshop.solvers;
 import jobshop.Instance;
 import jobshop.Result;
 import jobshop.Solver;
-import jobshop.encodings.RessourceOrder;
+import jobshop.encodings.ResourceOrder;
 import jobshop.encodings.Task;
 
 import java.util.Vector;
 
 public class lptSolver implements Solver {
     public Result solve(Instance instance, long deadline) {
-        RessourceOrder sol= new RessourceOrder(instance);
+        ResourceOrder sol= new ResourceOrder(instance);
         int nbTaskRemaining=instance.numJobs*instance.numMachines;
         Vector<Task> readyTodo=new Vector<Task>();
         //Place where the next task can be done on the machine
@@ -22,7 +22,7 @@ public class lptSolver implements Solver {
         {
             Task current = lptBest(readyTodo,instance);
             int machine = instance.machine(current.job,current.task);
-            sol.resources[machine][next[machine]] = current;
+            sol.tasksByMachine[machine][next[machine]] = current;
             next[machine]++;
             readyTodo.remove(current);
             if(current.task<instance.numMachines-1)

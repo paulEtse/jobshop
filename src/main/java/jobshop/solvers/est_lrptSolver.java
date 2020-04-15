@@ -3,7 +3,7 @@ package jobshop.solvers;
 import jobshop.Instance;
 import jobshop.Result;
 import jobshop.Solver;
-import jobshop.encodings.RessourceOrder;
+import jobshop.encodings.ResourceOrder;
 import jobshop.encodings.Task;
 
 import java.util.Vector;
@@ -11,7 +11,7 @@ import java.util.Vector;
 public class est_lrptSolver implements Solver {
     @Override
     public Result solve(Instance instance, long deadline) {
-        RessourceOrder sol= new RessourceOrder(instance);
+        ResourceOrder sol= new ResourceOrder(instance);
         int duration[] = new int[instance.numJobs];
         int nbTaskRemaining=instance.numJobs*instance.numMachines;
         Vector<Task> readyTodo=new Vector<Task>();
@@ -31,7 +31,7 @@ public class est_lrptSolver implements Solver {
         {
             Task current = est_sptBest(readyTodo,startTime,duration);
             int machine = instance.machine(current.job,current.task);
-            sol.resources[machine][next[machine]] = current;
+            sol.tasksByMachine[machine][next[machine]] = current;
             next[machine]++;
             readyTodo.remove(current);
             if(current.task<instance.numMachines-1)
