@@ -15,7 +15,9 @@ public class est_lrptSolver implements Solver {
         int duration[] = new int[instance.numJobs];
         int nbTaskRemaining=instance.numJobs*instance.numMachines;
         Vector<Task> readyTodo=new Vector<Task>();
-        int startTime[] = new int[instance.numJobs];
+        int startTimeOnJob[] = new int[instance.numJobs];
+        //Place where the next task can be done on the machine
+        int startTimeOnMachine[]= new int[instance.numMachines];
         //Place where the next task can be done on the machine
         int next[]=new int[instance.numJobs];
         for(int job=0;job<instance.numJobs;job++)
@@ -29,7 +31,7 @@ public class est_lrptSolver implements Solver {
         }
         while(nbTaskRemaining>0)
         {
-            Task current = est_sptBest(readyTodo,startTime,duration);
+            Task current = est_sptBest(readyTodo,startTimeOnJob,startTimeOnMachine,duration,instance);
             int machine = instance.machine(current.job,current.task);
             sol.tasksByMachine[machine][next[machine]] = current;
             next[machine]++;
@@ -39,18 +41,24 @@ public class est_lrptSolver implements Solver {
                 readyTodo.add(new Task(current.job,current.task+1));
             }
             nbTaskRemaining--;
-            startTime[current.job]+=instance.duration(current.job,current.task);
+            startTimeOnJob[current.job]+=instance.duration(current.job,current.task);
+            startTimeOnMachine[machine]+=instance.duration(current.job,current.task);
         }
         return new Result(instance,sol.toSchedule(),Result.ExitCause.Timeout);
     }
-    Task est_sptBest(Vector<Task> T,int[] startTime, int[] duration){
+    Task est_sptBest(Vector<Task> T,int[] startTimeOnJob,int[] startTimeOnMachine, int[] duration,Instance instance){
         Task task=T.elementAt(0);
+        int beginTask = Math.max(startTimeOnMachine[instance.machine(task.job,task.task)],startTimeOnJob[task.job]);
         Task t;
         for( int i=0;i<T.size();i++){
             t=T.elementAt(i);
-            if(startTime[t.job]<startTime[task.job])
+            int beginT = Math.max(startTimeOnMachine[instance.machine(task.job,task.task)],startTimeOnJob[t.job]);
+            if(beginT<beginTask)
+            {
                 task=t;
-            else if (startTime[t.job]==startTime[task.job] && duration[t.job] > duration[task.job])
+                beginTask=beginT;
+            }
+            else if (beginT==beginTask && duration[t.job] > duration[task.job])
                 task=t;
         }
         return task;

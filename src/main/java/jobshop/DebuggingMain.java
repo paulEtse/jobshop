@@ -38,12 +38,18 @@ public class DebuggingMain {
             System.out.println("MAKESPAN: " + sched.makespan());
 
 */
-            System.out.println("Test  2 ");
+            int Dmax=0;
+            for(int job=0;job<instance.numJobs;job++)
+                for(int task=0;task<instance.numMachines;task++){
+                    Dmax+=instance.duration(job,task);
+                }
+            System.out.println(Dmax);
+            /*System.out.println("Test  2 ");
             ResourceOrder enc2=new ResourceOrder(instance);
             long dealine=11111;
             Result enc3= new DescentSolver().solve(instance,dealine);
             Schedule sched2 = enc2.toSchedule();
-            System.out.println("schedule"+sched2);
+            System.out.println("schedule"+sched2);*/
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);

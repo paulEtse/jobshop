@@ -28,7 +28,7 @@ public class Main {
         solvers.put("srpt",new srptSolver());
         solvers.put("lrpt",new lrptSolver());
         solvers.put("est_spt",new est_sptSolver());
-        solvers.put("est_lrpt",new est_sptSolver());
+        solvers.put("est_lrpt",new est_lrptSolver());
         solvers.put("des",new DescentSolver());
         // add new solvers here
     }
