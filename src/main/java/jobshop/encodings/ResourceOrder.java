@@ -4,6 +4,7 @@ import jobshop.Encoding;
 import jobshop.Instance;
 import jobshop.Schedule;
 
+import javax.rmi.ssl.SslRMIClientSocketFactory;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -106,6 +107,38 @@ public class ResourceOrder extends Encoding {
         return new Schedule(instance, startTimes);
     }
 
+    //To do : write the method equal
+    public boolean equals(Object value)
+    {
+        ResourceOrder o =null;
+        boolean equal = true;
+        int i,j;
+        i=0;
+        j=0;
+        Task task1,task2;
+        if(value==null && this == null)
+            return true;
+        if(value instanceof ResourceOrder == false)
+            return false;
+        else
+            o = (ResourceOrder)value;
+        if(!(o.instance.numJobs ==instance.numJobs && o.instance.numMachines==instance.numMachines))
+            return false;
+        while (equal && (i<instance.numMachines-1 || j>= instance.numJobs-1)){
+            task1 = tasksByMachine[i][j];
+            task2 = o.tasksByMachine[i][j];
+            if (!task1.equals(task2))
+                equal = false;
+            if(j<instance.numJobs-1)
+                j++;
+            else
+            {
+                j=0;
+                i++;
+            }
+            }
+        return equal;
+    }
     /** Creates an exact copy of this resource order. */
     public ResourceOrder copy() {
         return new ResourceOrder(this.toSchedule());

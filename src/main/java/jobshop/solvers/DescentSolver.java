@@ -7,6 +7,7 @@ import jobshop.Solver;
 import jobshop.encodings.ResourceOrder;
 import jobshop.encodings.Task;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -79,35 +80,41 @@ public class DescentSolver implements Solver {
 
     @Override
     public Result solve(Instance instance, long deadline) {
-        ResourceOrder best = est_sptSolver.getSol(instance,deadline);
+        ResourceOrder best = est_sptSolver.getSol(instance);
         boolean change = true;
-        ResourceOrder copyBest;
-        while (change){
+        ResourceOrder currentBest;
+        while (change && deadline - System.currentTimeMillis() > 1){
             change=false;
-            ResourceOrder currentBest=null;
-            List<Block> blocks = blocksOfCriticalPath(best.copy());
-            for(Block block: blocks){
-                List<Swap> swaps = neighbors(block);
-                currentBest = best.copy();
-                swaps.get(0).applyOn(currentBest);
-                for(int i=1;i<swaps.size();i++){
-                    ResourceOrder current = best.copy();
-                    swaps.get(i).applyOn(current);
-                    if(current.toSchedule().makespan()<currentBest.toSchedule().makespan()){
-                        currentBest=current;
-                    }
-                }
-            }
-            if(currentBest!=null && currentBest.toSchedule().makespan()<best.toSchedule().makespan()){
+            /*==============*/
+            currentBest=getBest(best);
+            /*==============*/
+            if(currentBest.toSchedule().makespan()<best.toSchedule().makespan()){
                 best=currentBest;
                 change=true;
             }
         }
         return new Result(instance,best.toSchedule(),Result.ExitCause.Timeout);
     }
+    ResourceOrder getBest(ResourceOrder s){
+        List<Swap> swaps= new ArrayList();
 
+        ResourceOrder current,currentBest;
+        List<Block> blocks = blocksOfCriticalPath(s.copy());
+        for(Block block: blocks) {
+            swaps.addAll(neighbors(block));
+        }
+        currentBest = s.copy();
+        for(int i=0;i<swaps.size();i++){
+            current = s.copy();
+            swaps.get(i).applyOn(current);
+            if(current.toSchedule().makespan()<currentBest.toSchedule().makespan()){
+                currentBest=current;
+            }
+        }
+        return currentBest;
+    }
     /** Returns a list of all blocks of the critical path. */
-    List<Block> blocksOfCriticalPath(ResourceOrder order) {
+    static List<Block> blocksOfCriticalPath(ResourceOrder order) {
         List<Block> blocks = new Vector<Block>();
         Block b;
         int machine=0;
@@ -125,15 +132,15 @@ public class DescentSolver implements Solver {
                 j++;
             }
             if(j>i+1){
-                int x=findIndex(order.tasksByMachine[machine],criticalPath.get(i));
-                int y=findIndex(order.tasksByMachine[machine],criticalPath.get(j-1));
+                int x=indexOfTask(order.tasksByMachine[machine],criticalPath.get(i));
+                int y=indexOfTask(order.tasksByMachine[machine],criticalPath.get(j-1));
                 blocks.add(new Block(machine,x,y));
             }
             i=j;
         }
         return  blocks;
     }
-    int findIndex(Task[] Tab,Task t){
+    static int indexOfTask(Task[] Tab,Task t){
         boolean find = false;
         int k=0;
         while(k <Tab.length && !find)
@@ -147,7 +154,7 @@ public class DescentSolver implements Solver {
         return k;
     }
     /** For a given block, return the possible swaps for the Nowicki and Smutnicki neighborhood */
-    List<Swap> neighbors(Block block) {
+    static List<Swap> neighbors(Block block) {
         Task aux,t1,t,t2;
         Vector<Swap> swaps = new Vector<Swap>();
         swaps.add(new Swap(block.machine,block.firstTask,block.firstTask+1));

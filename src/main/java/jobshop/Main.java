@@ -30,6 +30,7 @@ public class Main {
         solvers.put("est_spt",new est_sptSolver());
         solvers.put("est_lrpt",new est_lrptSolver());
         solvers.put("des",new DescentSolver());
+        solvers.put("tabou",new TabooSolver());
         // add new solvers here
     }
 

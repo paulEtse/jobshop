@@ -38,7 +38,7 @@ public class est_sptSolver implements Solver {
         return new Result(instance,sol.toSchedule(),Result.ExitCause.Timeout);
     }
 
-    public static ResourceOrder getSol(Instance instance, long deadline) {
+    public static ResourceOrder getSol(Instance instance) {
         ResourceOrder sol= new ResourceOrder(instance);
         int nbTaskRemaining=instance.numJobs*instance.numMachines;
         Vector<Task> readyTodo=new Vector<Task>();

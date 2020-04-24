@@ -3,10 +3,12 @@ package jobshop;
 import jobshop.encodings.ResourceOrder;
 import jobshop.encodings.Task;
 import jobshop.solvers.DescentSolver;
+import jobshop.solvers.est_sptSolver;
 import jobshop.solvers.srptSolver;
 
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.Vector;
 
 public class DebuggingMain {
 
@@ -14,6 +16,7 @@ public class DebuggingMain {
         try {
             // load the aaa1 instance
             Instance instance = Instance.fromFile(Paths.get("instances/ft06"));
+            Instance instance2 = Instance.fromFile(Paths.get("instances/ft10"));
 
             // construit une solution dans la représentation par
             // numéro de jobs : [0 1 1 0 0 1]
@@ -38,16 +41,13 @@ public class DebuggingMain {
             System.out.println("MAKESPAN: " + sched.makespan());
 
 */
-            int Dmax=0;
-            for(int job=0;job<instance.numJobs;job++)
-                for(int task=0;task<instance.numMachines;task++){
-                    Dmax+=instance.duration(job,task);
-                }
-            System.out.println(Dmax);
-            /*System.out.println("Test  2 ");
-            ResourceOrder enc2=new ResourceOrder(instance);
-            long dealine=11111;
-            Result enc3= new DescentSolver().solve(instance,dealine);
+
+            ResourceOrder enc2=est_sptSolver.getSol(instance);
+            ResourceOrder enc3=enc2.copy();
+            Vector<ResourceOrder> sTabou = new Vector<ResourceOrder>();
+            sTabou.add(enc2);
+            System.out.println(sTabou.contains(enc3));
+            /*Result enc3= new DescentSolver().solve(instance,dealine);
             Schedule sched2 = enc2.toSchedule();
             System.out.println("schedule"+sched2);*/
         } catch (IOException e) {
