@@ -14,9 +14,9 @@ public class TabooSolver implements Solver {
     public Result solve(Instance instance, long deadline) {
         int dureeTaboo = 5;
         Taboo sTaboo = new Taboo(dureeTaboo,instance.numJobs,instance.numMachines);
-        int kMax=100;
+        int kMax=10;
 
-        ResourceOrder sInit = est_sptSolver.getSol(instance);
+        ResourceOrder sInit = est_lrptSolver.getSol(instance);
         ResourceOrder best = sInit;
         ResourceOrder s = sInit;
         int k=0;
@@ -57,6 +57,13 @@ public class TabooSolver implements Solver {
                 }
                 else
                     sTaboo.add(task1,task2,k);
+            }
+            else{
+                //solution tabou améliorant
+                swaps.get(i).applyOn(current);
+                if(current.toSchedule().makespan()<currentBest.toSchedule().makespan()){
+                    currentBest=current;
+                }
             }
         }
         return currentBest;

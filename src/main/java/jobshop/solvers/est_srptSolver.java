@@ -8,15 +8,16 @@ import jobshop.encodings.Task;
 
 import java.util.Vector;
 
-public class srptSolver implements Solver {
-    @Override
+public class est_srptSolver implements Solver {
     public Result solve(Instance instance, long deadline) {
         ResourceOrder sol= new ResourceOrder(instance);
         int nbTaskRemaining=instance.numJobs*instance.numMachines;
-        int remainingTime[] = new int[instance.numJobs];
         Vector<Task> readyTodo=new Vector<Task>();
+        int startTimeOnJob[] = new int[instance.numJobs];
         //Place where the next task can be done on the machine
+        int startTimeOnMachine[]= new int[instance.numMachines];
         int nextOnMachine[]=new int[instance.numMachines];
+        int remainingTime[] = new int[instance.numJobs];
         for (int job = 0; job < instance.numJobs; job++) {
             readyTodo.add(new Task(job,0));
             for(int task=0;task<instance.numMachines;task++)
@@ -27,7 +28,7 @@ public class srptSolver implements Solver {
         }
         while(nbTaskRemaining>0)
         {
-            Task current = srptBest(readyTodo, remainingTime);
+            Task current = est_sptBest(readyTodo,startTimeOnJob,startTimeOnMachine,instance,remainingTime);
             int machine = instance.machine(current.job,current.task);
             sol.tasksByMachine[machine][nextOnMachine[machine]] = current;
             nextOnMachine[machine]++;
@@ -38,18 +39,26 @@ public class srptSolver implements Solver {
             }
             nbTaskRemaining--;
             remainingTime[current.job]-=instance.duration(current.job,current.task);
+            int start = Math.max(startTimeOnJob[current.job],startTimeOnMachine[machine]);
+            startTimeOnJob[current.job]=start + instance.duration(current.job,current.task);
+            startTimeOnMachine[machine]=start + instance.duration(current.job,current.task);
         }
         return new Result(instance,sol.toSchedule(),Result.ExitCause.Timeout);
     }
 
-    Task srptBest(Vector<Task> T, int[] remainingTime){
+    private static Task est_sptBest(Vector<Task> T, int[] startTimeOnJob,int[] startTimeOnMachine, Instance instance, int[] remainingTime){
         Task task=T.elementAt(0);
-            Task t;
-            for( int i=1;i<T.size();i++){
-                t=T.elementAt(i);
-                if (remainingTime[t.job] < remainingTime[task.job])
-                    task=t;
+        int beginTask = Math.max(startTimeOnMachine[instance.machine(task.job,task.task)],startTimeOnJob[task.job]);
+        Task t;
+        for( int i=1;i<T.size();i++){
+            t=T.elementAt(i);
+            int beginT = Math.max(startTimeOnMachine[instance.machine(t.job,t.task)],startTimeOnJob[t.job]);
+            if(beginT<beginTask || (beginT==beginTask && remainingTime[t.job] < remainingTime[task.job]))
+            {
+                task=t;
+                beginTask=beginT;
             }
-            return task;
         }
+        return task;
+    }
 }
