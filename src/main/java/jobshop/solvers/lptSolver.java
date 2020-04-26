@@ -14,7 +14,7 @@ public class lptSolver implements Solver {
         int nbTaskRemaining=instance.numJobs*instance.numMachines;
         Vector<Task> readyTodo=new Vector<Task>();
         //Place where the next task can be done on the machine
-        int next[]=new int[instance.numJobs];
+        int nextOnMachine[]=new int[instance.numMachines];
         for (int job = 0; job < instance.numJobs; job++) {
             readyTodo.add(new Task(job,0));
         }
@@ -22,8 +22,8 @@ public class lptSolver implements Solver {
         {
             Task current = lptBest(readyTodo,instance);
             int machine = instance.machine(current.job,current.task);
-            sol.tasksByMachine[machine][next[machine]] = current;
-            next[machine]++;
+            sol.tasksByMachine[machine][nextOnMachine[machine]] = current;
+            nextOnMachine[machine]++;
             readyTodo.remove(current);
             if(current.task<instance.numMachines-1)
             {

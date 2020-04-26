@@ -4,7 +4,6 @@ import jobshop.Encoding;
 import jobshop.Instance;
 import jobshop.Schedule;
 
-import javax.rmi.ssl.SslRMIClientSocketFactory;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -78,10 +77,10 @@ public class ResourceOrder extends Encoding {
             // if there is no such task, we have cyclic dependency and the solution is invalid
             Optional<Task> schedulable =
                     IntStream.range(0, instance.numMachines) // all machines ...
-                            .filter(m -> nextToScheduleByMachine[m] < instance.numJobs) // ... with unscheduled jobs
-                            .mapToObj(m -> this.tasksByMachine[m][nextToScheduleByMachine[m]]) // tasks that are next to schedule on a machine ...
-                            .filter(task -> task.task == nextToScheduleByJob[task.job])  // ... and on their job
-                            .findFirst(); // select the first one if any
+                    .filter(m -> nextToScheduleByMachine[m] < instance.numJobs) // ... with unscheduled jobs
+                    .mapToObj(m -> this.tasksByMachine[m][nextToScheduleByMachine[m]]) // tasks that are next to schedule on a machine ...
+                    .filter(task -> task.task == nextToScheduleByJob[task.job])  // ... and on their job
+                    .findFirst(); // select the first one if any
 
             if(schedulable.isPresent()) {
                 // we found a schedulable task, lets call it t
@@ -90,7 +89,7 @@ public class ResourceOrder extends Encoding {
 
                 // compute the earliest start time (est) of the task
                 int est = t.task == 0 ? 0 : startTimes[t.job][t.task-1] + instance.duration(t.job, t.task-1);
-                est = Math.max(est, releaseTimeOfMachine[instance.machine(t.job,t.task)]);
+                est = Math.max(est, releaseTimeOfMachine[instance.machine(t)]);
                 startTimes[t.job][t.task] = est;
 
                 // mark the task as scheduled
@@ -107,38 +106,6 @@ public class ResourceOrder extends Encoding {
         return new Schedule(instance, startTimes);
     }
 
-    //To do : write the method equal
-    public boolean equals(Object value)
-    {
-        ResourceOrder o =null;
-        boolean equal = true;
-        int i,j;
-        i=0;
-        j=0;
-        Task task1,task2;
-        if(value==null && this == null)
-            return true;
-        if(value instanceof ResourceOrder == false)
-            return false;
-        else
-            o = (ResourceOrder)value;
-        if(!(o.instance.numJobs ==instance.numJobs && o.instance.numMachines==instance.numMachines))
-            return false;
-        while (equal && (i<instance.numMachines-1 || j>= instance.numJobs-1)){
-            task1 = tasksByMachine[i][j];
-            task2 = o.tasksByMachine[i][j];
-            if (!task1.equals(task2))
-                equal = false;
-            if(j<instance.numJobs-1)
-                j++;
-            else
-            {
-                j=0;
-                i++;
-            }
-            }
-        return equal;
-    }
     /** Creates an exact copy of this resource order. */
     public ResourceOrder copy() {
         return new ResourceOrder(this.toSchedule());

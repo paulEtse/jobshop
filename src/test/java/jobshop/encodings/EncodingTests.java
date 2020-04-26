@@ -44,10 +44,10 @@ public class EncodingTests {
         enc.jobs[enc.nextToSet++] = 1;
 
         sched = enc.toSchedule();
-        System.out.println(sched);
         assert sched.isValid();
         assert sched.makespan() == 14;
     }
+
     @Test
     public void testBasicSolver() throws IOException {
         Instance instance = Instance.fromFile(Paths.get("instances/aaa1"));

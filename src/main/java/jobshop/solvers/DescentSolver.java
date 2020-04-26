@@ -13,7 +13,7 @@ import java.util.Vector;
 
 public class DescentSolver implements Solver {
 
-    /** A block represents a subsequence of the critical path such that all tasks in it execute on the same machine.
+    /* * A block represents a subsequence of the critical path such that all tasks in it execute on the same machine.
      * This class identifies a block in a ResourceOrder representation.
      *
      * Consider the solution in ResourceOrder representation
@@ -113,7 +113,7 @@ public class DescentSolver implements Solver {
         }
         return currentBest;
     }
-    /** Returns a list of all blocks of the critical path. */
+    /* Returns a list of all blocks of the critical path. */
     static List<Block> blocksOfCriticalPath(ResourceOrder order) {
         List<Block> blocks = new Vector<Block>();
         Block b;
