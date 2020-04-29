@@ -10,6 +10,7 @@ import java.util.List;
 
 
 import jobshop.solvers.*;
+import jobshop.solvers.Random_greedySolver;
 import net.sourceforge.argparse4j.ArgumentParsers;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
@@ -34,6 +35,7 @@ public class Main {
         solvers.put("est_lpt",new est_lptSolver());
         solvers.put("des",new DescentSolver());
         solvers.put("tabou",new TabooSolver());
+        solvers.put("rand", new Random_greedySolver());
         // add new solvers here
     }
 
