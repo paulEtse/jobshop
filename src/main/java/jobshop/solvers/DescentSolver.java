@@ -81,9 +81,11 @@ public class DescentSolver implements Solver {
     @Override
     public Result solve(Instance instance, long deadline) {
         ResourceOrder best = new ResourceOrder(new est_lrptSolver().solve(instance,deadline).schedule);
+        //ResourceOrder best = new ResourceOrder(new Random_greedySolver().solve(instance,deadline).schedule);
         boolean change = true;
         ResourceOrder currentBest;
-        while (change && deadline - System.currentTimeMillis() > 1){
+        //&& deadline - System.currentTimeMillis() > 1
+        while (change ){
             change=false;
             /*==============*/
             currentBest=getBest(best);
