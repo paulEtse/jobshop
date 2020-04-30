@@ -80,7 +80,7 @@ public class DescentSolver implements Solver {
 
     @Override
     public Result solve(Instance instance, long deadline) {
-        ResourceOrder best = est_lrptSolver.getSol(instance);
+        ResourceOrder best = new ResourceOrder(new est_lrptSolver().solve(instance,deadline).schedule);
         boolean change = true;
         ResourceOrder currentBest;
         while (change && deadline - System.currentTimeMillis() > 1){

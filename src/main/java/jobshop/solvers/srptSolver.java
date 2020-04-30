@@ -16,7 +16,6 @@ public class srptSolver implements Solver {
         int remainingTime[] = new int[instance.numJobs];
         Vector<Task> readyTodo=new Vector<Task>();
         //Place where the next task can be done on the machine
-        int nextOnMachine[]=new int[instance.numMachines];
         for (int job = 0; job < instance.numJobs; job++) {
             readyTodo.add(new Task(job,0));
             for(int task=0;task<instance.numMachines;task++)
@@ -25,12 +24,11 @@ public class srptSolver implements Solver {
                 remainingTime[job]+=duration;
             }
         }
-        while(nbTaskRemaining>0)
-        {
+        for(int i = nbTaskRemaining;i>0;i--){
             Task current = srptBest(readyTodo, remainingTime);
             int machine = instance.machine(current.job,current.task);
-            sol.tasksByMachine[machine][nextOnMachine[machine]] = current;
-            nextOnMachine[machine]++;
+            sol.tasksByMachine[machine][sol.nextFreeSlot[machine]] = current;
+            sol.nextFreeSlot[machine]++;
             readyTodo.remove(current);
             if(current.task<instance.numMachines-1)
             {

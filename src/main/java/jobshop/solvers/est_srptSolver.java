@@ -16,7 +16,6 @@ public class est_srptSolver implements Solver {
         int startTimeOnJob[] = new int[instance.numJobs];
         //Place where the next task can be done on the machine
         int startTimeOnMachine[]= new int[instance.numMachines];
-        int nextOnMachine[]=new int[instance.numMachines];
         int remainingTime[] = new int[instance.numJobs];
         for (int job = 0; job < instance.numJobs; job++) {
             readyTodo.add(new Task(job,0));
@@ -26,12 +25,11 @@ public class est_srptSolver implements Solver {
                 remainingTime[job]+=duration;
             }
         }
-        while(nbTaskRemaining>0)
-        {
+        for(int i = nbTaskRemaining;i>0;i--){
             Task current = est_sptBest(readyTodo,startTimeOnJob,startTimeOnMachine,instance,remainingTime);
             int machine = instance.machine(current.job,current.task);
-            sol.tasksByMachine[machine][nextOnMachine[machine]] = current;
-            nextOnMachine[machine]++;
+            sol.tasksByMachine[machine][sol.nextFreeSlot[machine]] = current;
+            sol.nextFreeSlot[machine]++;
             readyTodo.remove(current);
             if(current.task<instance.numMachines-1)
             {

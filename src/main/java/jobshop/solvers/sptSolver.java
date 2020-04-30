@@ -15,16 +15,14 @@ public class sptSolver implements Solver {
         int nbTaskRemaining=instance.numJobs*instance.numMachines;
         Vector<Task> readyTodo=new Vector<Task>();
         //Place where the next task can be done on the machine
-        int nextOnMachine[] = new int[instance.numMachines];
         for (int job = 0; job < instance.numJobs; job++) {
             readyTodo.add(new Task(job,0));
         }
-        while(nbTaskRemaining>0)
-        {
+        for(int i = nbTaskRemaining;i>0;i--){
             Task current = sptBest(readyTodo,instance);
             int machine = instance.machine(current.job,current.task);
-            sol.tasksByMachine[machine][nextOnMachine[machine]] = current;
-            nextOnMachine[machine]++;
+            sol.tasksByMachine[machine][sol.nextFreeSlot[machine]] = current;
+            sol.nextFreeSlot[machine]++;
             readyTodo.remove(current);
             if(current.task<instance.numMachines-1)
             {

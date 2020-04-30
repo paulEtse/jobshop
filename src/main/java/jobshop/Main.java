@@ -34,7 +34,7 @@ public class Main {
         solvers.put("est_srpt",new est_srptSolver());
         solvers.put("est_lpt",new est_lptSolver());
         solvers.put("des",new DescentSolver());
-        solvers.put("tabou",new TabooSolver());
+        solvers.put("taboo",new TabooSolver());
         solvers.put("rand", new Random_greedySolver());
         // add new solvers here
     }
