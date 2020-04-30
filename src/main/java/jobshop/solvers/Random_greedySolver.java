@@ -31,7 +31,8 @@ public class Random_greedySolver implements Solver {
             }
             int nbTaskRemaining=instance.numJobs*instance.numMachines;
             for(int i = nbTaskRemaining;i>0;i--){
-                Task current = random(readyTodo,generator);
+                int randomIndexToSwap = generator.nextInt(readyTodo.size());
+                Task current=  readyTodo.get(randomIndexToSwap);
                 int machine = instance.machine(current.job,current.task);
                 sol.tasksByMachine[machine][nextTaskOnMachine[machine]] = current;
                 nextTaskOnMachine[machine]++;
@@ -47,9 +48,5 @@ public class Random_greedySolver implements Solver {
             }
         }
         return new Result(instance,bestSche,Result.ExitCause.Blocked);
-    }
-    Task random(Vector<Task> T, Random rand){
-        int randomIndexToSwap = rand.nextInt(T.size());
-        return T.get(randomIndexToSwap);
     }
 }
