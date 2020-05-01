@@ -88,7 +88,7 @@ public class DescentSolver implements Solver {
         while (change ){
             change=false;
             /*==============*/
-            currentBest=getBest(best);
+            currentBest=getBestNeighbour(best);
             /*==============*/
             if(currentBest.toSchedule().makespan()<best.toSchedule().makespan()){
                 best=currentBest;
@@ -97,7 +97,7 @@ public class DescentSolver implements Solver {
         }
         return new Result(instance,best.toSchedule(),Result.ExitCause.Timeout);
     }
-    ResourceOrder getBest(ResourceOrder s){
+    ResourceOrder getBestNeighbour(ResourceOrder s){
         List<Swap> swaps= new ArrayList();
 
         ResourceOrder current,currentBest;
