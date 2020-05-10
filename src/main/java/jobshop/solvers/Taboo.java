@@ -9,7 +9,6 @@ public class Taboo {
     private Vector<Task> tasks;
     private int[][] matriceTaboo;
     private int dureeTaboo;
-    DescentSolver.Swap swap;
     public Taboo(int dureeTaboo,int nbJob, int nbMachine){
         tasks = new Vector<Task>();
         matriceTaboo = new int [nbJob*nbMachine][nbJob*nbMachine];

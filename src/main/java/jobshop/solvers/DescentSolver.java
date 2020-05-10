@@ -84,8 +84,7 @@ public class DescentSolver implements Solver {
         //ResourceOrder best = new ResourceOrder(new Random_greedySolver().solve(instance,deadline).schedule);
         boolean change = true;
         ResourceOrder currentBest;
-        //&& deadline - System.currentTimeMillis() > 1
-        while (change ){
+        while (change && deadline - System.currentTimeMillis() > 1 ){
             change=false;
             /*==============*/
             currentBest=getBestNeighbour(best);
@@ -101,7 +100,7 @@ public class DescentSolver implements Solver {
         List<Swap> swaps= new ArrayList();
 
         ResourceOrder current,currentBest;
-        List<Block> blocks = blocksOfCriticalPath(s.copy());
+        List<Block> blocks = blocksOfCriticalPath(s);
         for(Block block: blocks) {
             swaps.addAll(neighbors(block));
         }
@@ -121,8 +120,6 @@ public class DescentSolver implements Solver {
         Block b;
         int machine=0;
         List<Task> criticalPath = order.toSchedule().criticalPath();
-        if(blocks.size()>0)
-            machine=order.instance.machine(criticalPath.get(0).job,criticalPath.get(0).task);
         int j,i=0;
         Task t;
         while(i<criticalPath.size())

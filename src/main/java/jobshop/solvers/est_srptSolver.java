@@ -37,14 +37,14 @@ public class est_srptSolver implements Solver {
             }
             nbTaskRemaining--;
             remainingTime[current.job]-=instance.duration(current.job,current.task);
-            int start = Math.max(startTimeOnJob[current.job],startTimeOnMachine[machine]);
-            startTimeOnJob[current.job]=start + instance.duration(current.job,current.task);
-            startTimeOnMachine[machine]=start + instance.duration(current.job,current.task);
+            int start = Math.max(startTimeOnJob[current.job],startTimeOnMachine[machine]) + instance.duration(current.job,current.task);
+            startTimeOnJob[current.job]=start;
+            startTimeOnMachine[machine]=start;
         }
         return new Result(instance,sol.toSchedule(),Result.ExitCause.Timeout);
     }
 
-    private static Task est_sptBest(Vector<Task> T, int[] startTimeOnJob,int[] startTimeOnMachine, Instance instance, int[] remainingTime){
+    private Task est_sptBest(Vector<Task> T, int[] startTimeOnJob,int[] startTimeOnMachine, Instance instance, int[] remainingTime){
         Task task=T.elementAt(0);
         int beginTask = Math.max(startTimeOnMachine[instance.machine(task.job,task.task)],startTimeOnJob[task.job]);
         Task t;

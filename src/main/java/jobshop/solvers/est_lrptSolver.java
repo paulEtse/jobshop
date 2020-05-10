@@ -40,20 +40,20 @@ public class est_lrptSolver implements Solver {
             }
             nbTaskRemaining--;
             remainingDuration[current.job]-=instance.duration(current.job,current.task);
-            int start = Math.max(startTimeOnJob[current.job],startTimeOnMachine[machine]);
-            startTimeOnJob[current.job]=start + instance.duration(current.job,current.task);
-            startTimeOnMachine[machine]=start + instance.duration(current.job,current.task);
+            int start = Math.max(startTimeOnJob[current.job],startTimeOnMachine[machine]) + instance.duration(current.job,current.task);
+            startTimeOnJob[current.job]=start;
+            startTimeOnMachine[machine]=start;
         }
         return new Result(instance,sol.toSchedule(),Result.ExitCause.Timeout);
     }
-    private static Task est_sptBest(Vector<Task> T,int[] startTimeOnJob,int[] startTimeOnMachine, int[] duration,Instance instance){
+    private static Task est_sptBest(Vector<Task> T,int[] startTimeOnJob,int[] startTimeOnMachine, int[] remaining,Instance instance){
         Task task=T.elementAt(0);
         int beginTask = Math.max(startTimeOnMachine[instance.machine(task.job,task.task)],startTimeOnJob[task.job]);
         Task t;
         for( int i=1;i<T.size();i++){
             t=T.elementAt(i);
             int beginT = Math.max(startTimeOnMachine[instance.machine(t.job,t.task)],startTimeOnJob[t.job]);
-            if(beginT<beginTask|| (beginT==beginTask && duration[t.job] > duration[task.job]))
+            if(beginT < beginTask || (beginT==beginTask && remaining[t.job] > remaining[task.job]))
             {
                 task=t;
                 beginTask=beginT;

@@ -1,7 +1,9 @@
 package jobshop;
 
 import jobshop.encodings.JobNumbers;
+import jobshop.solvers.DescentSolver;
 import jobshop.solvers.Random_greedySolver;
+import jobshop.solvers.TabooSolver;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -34,7 +36,7 @@ public class DebuggingMain {
             System.out.println("SCHEDULE: " + sched);
             System.out.println("VALID: " + sched.isValid());
             System.out.println("MAKESPAN: " + sched.makespan());*/
-            new Random_greedySolver().solve(instance, System.currentTimeMillis()+1000);
+            new TabooSolver().solve(instance, System.currentTimeMillis()+1000);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);

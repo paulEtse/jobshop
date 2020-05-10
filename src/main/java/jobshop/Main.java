@@ -94,6 +94,7 @@ public class Main {
 
         float[] runtimes = new float[solversToTest.size()];
         float[] distances = new float[solversToTest.size()];
+        float[] makespans= new float[solversToTest.size()];
 
         try {
             output.print(  "                         ");
@@ -131,10 +132,10 @@ public class Main {
 
                     assert result.schedule.isValid();
                     int makespan = result.schedule.makespan();
+                    makespans[solverId] += (float) makespan / instances.size();
                     float dist = 100f * (makespan - bestKnown) / (float) bestKnown;
                     runtimes[solverId] += (float) runtime / (float) instances.size();
                     distances[solverId] += dist / (float) instances.size();
-
                     output.printf("%7d %8s %5.1f        ", runtime, makespan, dist);
                     output.flush();
                 }
@@ -145,7 +146,7 @@ public class Main {
 
             output.printf("%-8s %-5s %4s      ", "AVG", "-", "-");
             for(int solverId = 0 ; solverId < solversToTest.size() ; solverId++) {
-                output.printf("%7.1f %8s %5.1f        ", runtimes[solverId], "-", distances[solverId]);
+                output.printf("%7.1f %7.1f %5.1f        ", runtimes[solverId], makespans[solverId], distances[solverId]);
             }
 
 

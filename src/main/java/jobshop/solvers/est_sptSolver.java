@@ -30,9 +30,9 @@ public class est_sptSolver implements Solver {
                 readyTodo.add(new Task(current.job,current.task+1));
             }
             nbTaskRemaining--;
-            int start = Math.max(startTimeOnJob[current.job],startTimeOnMachine[machine]);
-            startTimeOnJob[current.job]=start + instance.duration(current.job,current.task);
-            startTimeOnMachine[machine]=start + instance.duration(current.job,current.task);
+            int start = Math.max(startTimeOnJob[current.job],startTimeOnMachine[machine]) + instance.duration(current.job,current.task);
+            startTimeOnJob[current.job]=start;
+            startTimeOnMachine[machine]=start;
         }
         return new Result(instance,sol.toSchedule(),Result.ExitCause.Timeout);
     }
