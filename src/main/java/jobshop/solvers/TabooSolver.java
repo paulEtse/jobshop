@@ -15,7 +15,7 @@ public class TabooSolver implements Solver {
         int dureeTaboo = 5;
         Taboo sTaboo = new Taboo(dureeTaboo,instance.numJobs,instance.numMachines);
         int kMax=10;
-        ResourceOrder sInit = new ResourceOrder(new est_lrptSolver().solve(instance,deadline).schedule);
+        ResourceOrder sInit = new ResourceOrder(new Est_LrptSolver().solve(instance,deadline).schedule);
         ResourceOrder best = sInit;
         ResourceOrder s = sInit;
         int k=0;

@@ -8,7 +8,7 @@ import jobshop.encodings.Task;
 
 import java.util.Vector;
 
-public class srptSolver implements Solver {
+public class SrptSolver implements Solver {
     @Override
     public Result solve(Instance instance, long deadline) {
         ResourceOrder sol= new ResourceOrder(instance);

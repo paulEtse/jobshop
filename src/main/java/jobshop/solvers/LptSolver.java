@@ -8,7 +8,7 @@ import jobshop.encodings.Task;
 
 import java.util.Vector;
 
-public class lptSolver implements Solver {
+public class LptSolver implements Solver {
     public Result solve(Instance instance, long deadline) {
         ResourceOrder sol= new ResourceOrder(instance);
         int nbTaskRemaining=instance.numJobs*instance.numMachines;

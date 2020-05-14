@@ -2,7 +2,6 @@ package jobshop.solvers;
 
 import jobshop.Instance;
 import jobshop.Result;
-import jobshop.Schedule;
 import jobshop.Solver;
 import jobshop.encodings.ResourceOrder;
 import jobshop.encodings.Task;
@@ -80,7 +79,7 @@ public class DescentSolver implements Solver {
 
     @Override
     public Result solve(Instance instance, long deadline) {
-        ResourceOrder best = new ResourceOrder(new est_lrptSolver().solve(instance,deadline).schedule);
+        ResourceOrder best = new ResourceOrder(new Est_LrptSolver().solve(instance,deadline).schedule);
         //ResourceOrder best = new ResourceOrder(new Random_greedySolver().solve(instance,deadline).schedule);
         boolean change = true;
         ResourceOrder currentBest;
